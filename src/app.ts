@@ -17,3 +17,31 @@ app.listen(PORT, () => {
  console.log("Server is running on port", PORT); 
 
  }); 
+ 
+ app.get('/bananas', async (_req : Request, res: Response) => { 
+
+ res.json({ 
+
+ message: "this is bananas", 
+
+  }); 
+  
+
+}); 
+ app.get('/cars', async (_req : Request, res: Response) => { 
+
+ res.json({             
+
+message: "this is cars",  
+
+  }); 
+  
+
+}); 
+app.use((req, _res, next) => { 
+
+ console.log(`${req.method} ${req.originalUrl}`); 
+
+ next(); 
+
+}); 
