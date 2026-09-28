@@ -1,23 +1,24 @@
+import dotenv from 'dotenv';
+import { z } from 'zod';
 
-import dotenv from "dotenv"; 
+dotenv.config();
 
- 
+const envSchema = z.object({
+  PORT: z.coerce.number().int().positive(),
+  NODE_ENV: z.enum(['development', 'test', 'production']),
+  MONGODB_URI: z.string().min(1, 'MONGODB_URI is required'),
+});
 
-dotenv.config(); 
+const result = envSchema.safeParse(process.env);
 
- 
+if (!result.success) {
+  console.error('Environment validation failed');
+  console.error(result.error.issues);
+  process.exit(1);
+}
 
-export const env = { 
-
- 
-
-port: Number(process.env.PORT ?? 3001), 
-
-nodeEnv: process.env.NODE_ENV ?? "development", 
-
- mongoURI: process.env.MONGODB_URI ?? "" 
-
-
- 
-
-}; 
+export const env = {
+  port: result.data.PORT,
+  nodeEnv: result.data.NODE_ENV,
+  mongoURI: result.data.MONGODB_URI,
+};

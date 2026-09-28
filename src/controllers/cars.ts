@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Types } from 'mongoose';
 import { CarService } from '../services/cars';
+import { createCarZSchema, updateCarZSchema } from '../models/cars';
 
 const carService = new CarService();
 
@@ -29,8 +30,15 @@ export class CarController {
   };
 
   createCar = async (req: Request, res: Response): Promise<void> => {
+    const validation = createCarZSchema.safeParse(req.body);
+
+    if (!validation.success) {
+      res.status(400).json({ message: 'Invalid car data', errors: validation.error.issues });
+      return;
+    }
+
     try {
-      const newCar = await carService.createCar(req.body);
+      const newCar = await carService.createCar(validation.data);
       res.status(201).json(newCar);
     } catch (error) {
       res.status(500).json({ message: 'Error inserting into MongoDB', error });
@@ -38,9 +46,17 @@ export class CarController {
   };
 
   updateCar = async (req: Request, res: Response): Promise<void> => {
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+
+    const validation = updateCarZSchema.safeParse(req.body);
+
+    if (!validation.success) {
+      res.status(400).json({ message: 'Invalid car data', errors: validation.error.issues });
+      return;
+    }
+
     try {
-      const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-      const updatedCar = await carService.updateCar(id, req.body);
+      const updatedCar = await carService.updateCar(id, validation.data);
       if (!updatedCar) {
         res.status(404).json({ message: 'Car not found' });
         return;
