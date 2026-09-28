@@ -1,27 +1,17 @@
-import { Router } from 'express'; 
+import { Router } from 'express';
 
-import { CarController } from '../controllers/cars'; 
+import { CarController } from '../controllers/cars';
+import { authenticateKey } from '../middleware/auth.middleware';
 
- 
+const router = Router();
+const carController = new CarController();
 
-const router = Router(); 
+router.use(authenticateKey);
 
-const carController = new CarController(); 
+router.get('/', carController.getCars);
+router.get('/:id', carController.getCarById);
+router.post('/', carController.createCar);
+router.put('/:id', carController.updateCar);
+router.delete('/:id', carController.deleteCar);
 
- 
-
-router.get('/', carController.getCars); 
-
- 
-
-router.get('/:id', carController.getCarById); 
-
-router.post('/', carController.createCar); 
-
-router.put('/:id', carController.updateCar); 
-
-router.delete('/:id', carController.deleteCar); 
-
- 
-
-export default router; 
+export default router;

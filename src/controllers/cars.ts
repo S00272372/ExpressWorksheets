@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { Types } from 'mongoose';
 import { CarService } from '../services/cars';
 
 const carService = new CarService();
@@ -53,12 +54,19 @@ export class CarController {
   deleteCar = async (req: Request, res: Response): Promise<void> => {
     try {
       const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+
+      if (!id || !Types.ObjectId.isValid(id)) {
+        res.status(400).json({ message: 'Invalid car ID' });
+        return;
+      }
+
       const deleted = await carService.deleteCar(id);
       if (!deleted) {
         res.status(404).json({ message: 'Car not found' });
         return;
       }
-      res.status(200).json(deleted);
+
+      res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: 'Error deleting car', error });
     }

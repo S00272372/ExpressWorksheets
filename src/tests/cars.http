@@ -1,28 +1,39 @@
-@endpoint = http://localhost:5252/api/v1/cars 
-
-### 
-
-POST {{endpoint}} HTTP/1.1 
-
-content-type: application/json 
-{"test" : "post test"}
-
-### 
-GET {{endpoint}} HTTP/3.0 
-
-content-type: application/json 
+@endpoint = http://localhost:3001/api/v1/cars
 
 ###
-GET {{endpoint}}/sillycarID HTTP/3.0 
-
-content-type: application/json 
-
-### 
-DELETE {{endpoint}}/sillycarID HTTP/3.0 
-
-content-type: application/json 
-
-### 
-PUT {{endpoint}}/sillycarID HTTP/3.0 
-
+# @name postACar
+POST {{endpoint}} HTTP/1.1
 content-type: application/json
+
+{
+  "make": "make2",
+  "model": "model2"
+}
+
+###
+@newCar = {{postACar.response.body._id}}
+
+###
+GET {{endpoint}}/{{newCar}} HTTP/1.1
+content-type: application/json
+
+###
+GET {{endpoint}} HTTP/1.1
+content-type: application/json
+
+###
+GET {{endpoint}}/sillycarID HTTP/1.1
+content-type: application/json
+
+###
+DELETE {{endpoint}}/{{newCar}} HTTP/1.1
+content-type: application/json
+
+###
+PUT {{endpoint}}/{{newCar}} HTTP/1.1
+content-type: application/json
+
+{
+  "make": "updatedMake",
+  "model": "updatedModel"
+}
