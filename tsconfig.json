@@ -4,7 +4,7 @@
  "module": "NodeNext", 
  "moduleResolution": "NodeNext", 
  "outDir": "./build", 
- "rootDir": "./src", 
+ "rootDir": "./", 
  
  /* Strict Type-Checking */ 
  "strict": true, 
@@ -25,7 +25,7 @@
  "sourceMap": true, 
  "types": ["node"] 
 }, 
- "include": ["src/**/*", "controllers"], 
+ "include": ["src/**/*", "tests/**/*"], 
  "exclude": ["node_modules", "build"] 
 
 } 

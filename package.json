@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node build/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch src/app.ts",
+    "start": "server.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dev": "server.ts ",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [],
