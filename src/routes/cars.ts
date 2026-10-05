@@ -8,7 +8,7 @@ import {createCarZSchema}  from '../models/cars';
 const router = Router();
 const carController = new CarController();
 
-router.use(authenticateKey);
+
 router.post('/', validate(createCarZSchema), carController.createCar);
 router.get('/', carController.getCars);
 router.get('/:id', carController.getCarById);

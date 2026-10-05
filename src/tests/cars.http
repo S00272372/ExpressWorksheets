@@ -1,4 +1,4 @@
-@endpoint = http://localhost:3001/api/v1/cars
+@endpoint = http://localhost:3000/api/v1/cars
 
 ###
 # @name postACar
@@ -7,7 +7,8 @@ content-type: application/json
 
 {
   "make": "make2",
-  "model": "model2"
+  "model": "model2",
+  "year": 2022
 }
 
 ###
