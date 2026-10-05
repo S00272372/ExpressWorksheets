@@ -1,47 +1,43 @@
-import express, {Application, Request, Response} from "express" ; 
-const PORT = process.env.PORT || 5252; 
-const app: Application = express(); 
+import express, { Application, Request, Response } from 'express';
+import carRoutes from './routes/cars';
+import { env } from './config/env';
+import { connectDB } from './config/database';
+import { authenticateKey } from './middleware/auth.middleware';
+import { logRequest } from './middleware/logging.middleware';
+import { swaggerSpec } from './config/swagger';
+import swaggerUi from 'swagger-ui-express';
 
-app.get("/ping", async (_req : Request, res: Response) => { 
+const PORT = env.port;
+const app: Application = express();
 
- res.json({ 
+app.use(express.json());
+app.use(logRequest);
+app.use('/api/v1/cars', authenticateKey, carRoutes);
 
- message: "S00272372 Artem Domashenko"
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec)
+);
 
- }); 
+app.get('/ping', async (_req: Request, res: Response) => {
+  res.json({ message: 'S00272372 Artem Domashenko' });
+});
 
-}); 
+app.get('/bananas', async (_req: Request, res: Response) => {
+  res.json({ message: 'this is bananas' });
+});
 
-app.listen(PORT, () => { 
+app.get('/cars', async (_req: Request, res: Response) => {
+  res.json({ message: 'this is cars' });
+});
 
- console.log("Server is running on port", PORT); 
+const startServer = async (): Promise<void> => {
+  await connectDB();
 
- }); 
- 
- app.get('/bananas', async (_req : Request, res: Response) => { 
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
 
- res.json({ 
-
- message: "this is bananas", 
-
-  }); 
-  
-
-}); 
- app.get('/cars', async (_req : Request, res: Response) => { 
-
- res.json({             
-
-message: "this is cars",  
-
-  }); 
-  
-
-}); 
-app.use((req, _res, next) => { 
-
- console.log(`${req.method} ${req.originalUrl}`); 
-
- next(); 
-
-}); 
+startServer();
