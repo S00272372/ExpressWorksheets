@@ -1,4 +1,5 @@
 import express, { Application, Request, Response } from 'express';
+import cors from 'cors';
 import carRoutes from './routes/cars';
 import { logRequest } from './middleware/logging.middleware';
 import { swaggerSpec } from './config/swagger';
@@ -9,11 +10,13 @@ const app: Application = express();
 
 app.use(express.json());
 app.use(logRequest);
+app.use(cors());
 
 app.get('/ping', (_req: Request, res: Response) => {
   res.status(200).json({ message: 'pong' });
 });
 
+app.use('/cars', carRoutes);
 app.use('/api/v1/cars', carRoutes);
 
 app.use(

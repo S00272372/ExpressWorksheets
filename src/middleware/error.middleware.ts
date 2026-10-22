@@ -1,8 +1,6 @@
 
-import {
-  ErrorRequestHandler
-} from 'express';
-import { ZodError } from 'zod';
+import { ErrorRequestHandler } from 'express';
+import { AppError, ValidationError } from '../apperrors';
 import { NotFoundError } from '../errors/NotFoundError';
 
 export const errorMiddleware: ErrorRequestHandler = (
@@ -11,19 +9,19 @@ export const errorMiddleware: ErrorRequestHandler = (
   res,
   _next
 ) => {
-  if (error instanceof NotFoundError) {
-    res.status(404).json({
-      status: 'fail',
-      message: error.message
+  if (error instanceof ValidationError) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+      errors: error.details
     });
     return;
   }
 
-  if (error instanceof ZodError) {
-    res.status(400).json({
-      status: 'fail',
-      message: 'Validation failed',
-      errors: error.issues
+  if (error instanceof NotFoundError || error instanceof AppError) {
+    res.status(error.statusCode).json({
+      success: false,
+      message: error.message
     });
     return;
   }
@@ -31,7 +29,7 @@ export const errorMiddleware: ErrorRequestHandler = (
   console.error(error);
 
   res.status(500).json({
-    status: 'error',
-    message: 'Internal server error'
+    success: false,
+    message: 'Server Error'
   });
 };
