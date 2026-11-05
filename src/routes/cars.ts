@@ -70,7 +70,6 @@ router.get(
  */
 router.post(
   '/',
-  authenticateKey,
   validate(createCarZSchema),
   carController.createCar
 );
