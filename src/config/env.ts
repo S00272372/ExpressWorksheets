@@ -1,12 +1,13 @@
-import dotenv from 'dotenv';
+
+import 'dotenv/config';
 import { z } from 'zod';
 
-dotenv.config();
-
 const envSchema = z.object({
-  PORT: z.coerce.number().int().positive(),
-  NODE_ENV: z.enum(['development', 'test', 'production']),
-  MONGODB_URI: z.string().min(1, 'MONGODB_URI is required'),
+  PORT: z.coerce.number().default(3000),
+  NODE_ENV: z
+    .enum(['development', 'test', 'production'])
+    .default('development'),
+  MONGODB_URI: z.string().min(1, 'MONGODB_URI is required')
 });
 
 const result = envSchema.safeParse(process.env);
@@ -20,5 +21,5 @@ if (!result.success) {
 export const env = {
   port: result.data.PORT,
   nodeEnv: result.data.NODE_ENV,
-  mongoURI: result.data.MONGODB_URI,
+  mongodbUri: result.data.MONGODB_URI
 };

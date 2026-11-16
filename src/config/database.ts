@@ -1,29 +1,13 @@
-import {env} from '../config/env'; 
 
- 
+import mongoose from 'mongoose';
+import { env } from './env';
 
-import mongoose from 'mongoose'; 
-
- 
-
-const uri = env.mongoURI ; 
-
- 
-
-export const connectDB = async (): Promise<void> => { 
-
- try { 
-
- console.log(`Connecting to MongoDB at`); 
-
- await mongoose.connect(uri); 
-
- console.log(`MongoDB Connected (Mongoose): `); 
-
- } catch (error) { 
-
- console.error(`Error connecting to MongoDB: ${(error as Error).message}`); 
- process.exit(1); 
- } 
-
+export const connectDB = async (): Promise<void> => {
+  try {
+    await mongoose.connect(env.mongodbUri);
+    console.log('MongoDB connected successfully');
+  } catch (error) {
+    console.error('MongoDB connection failed:', error);
+    throw error;
+  }
 };
