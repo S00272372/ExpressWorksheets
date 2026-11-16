@@ -5,6 +5,7 @@ import { logRequest } from './middleware/logging.middleware';
 import { swaggerSpec } from './config/swagger';
 import swaggerUi from 'swagger-ui-express';
 import { errorMiddleware } from './middleware/error.middleware';
+import authRoutes from './routes/auth';
 
 const app: Application = express();
 
@@ -16,6 +17,7 @@ app.get('/ping', (_req: Request, res: Response) => {
   res.status(200).json({ message: 'pong' });
 });
 
+app.use('/api/v1/auth', authRoutes);
 app.use('/cars', carRoutes);
 app.use('/api/v1/cars', carRoutes);
 

@@ -1,7 +1,6 @@
-
 import { Router } from 'express';
 import { CarController } from '../controllers/cars';
-import { authenticateKey } from '../middleware/auth.middleware';
+import { authenticateJWT } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
 import {
   createCarZSchema,
@@ -123,10 +122,6 @@ router.put(
  *       404:
  *         description: Car not found
  */
-router.delete(
-  '/:id',
-  validate(carParamsSchema),
-  carController.deleteCar
-);
+router.delete('/:id', authenticateJWT, validate(carParamsSchema), carController.deleteCar);
 
 export default router;
